@@ -18,6 +18,8 @@
   "homepage": "https://github.com/BettyHoPro/page-fetcher-main#readme",
   "dependencies": {
     "is-valid-path": "^0.1.1",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "url-status-code": "^2.0.0",
+    "valid-url": "^1.0.9"
   }
 }
