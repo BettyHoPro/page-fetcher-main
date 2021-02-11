@@ -52,7 +52,7 @@ const checkURL = (url) => {
   if (isURLValid.isUri(url)) {
     urlStatusCode(url, (error, statusCode) => {
       if (error) {
-        console.log("The link is not working... God, this is so close");
+        console.log("The link is not working...");
         process.exit();
       } else {
         requestFunc(process.argv[2], process.argv[3], writeToFile);
