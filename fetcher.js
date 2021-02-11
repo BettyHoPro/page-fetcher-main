@@ -3,8 +3,9 @@ const fs = require("fs");
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
+let isValid = require("is-valid-path");
 
 const writeToFile = (data, fileName) => {
   fs.writeFile(fileName, data, (error) => {
@@ -22,8 +23,7 @@ const requestFunc = (url, fileName, callback) => {
   request(url, (error, response, body) => {
     fs.stat(fileName, (err) => {
       if (!err) {
-        console.log("file already exist");
-        rl.question("The file already exist, do you want to over write the file? Y for yes : ", (data) => {
+        rl.question("The file already exist, do you want to overwrite the file?Y for yes : ", (data) => {
           if (data === "y" || data === "Y") {
             console.log(`Thank you for your answer: ${data}`);
             callback(body, fileName);
@@ -31,13 +31,15 @@ const requestFunc = (url, fileName, callback) => {
             process.exit();
           }
         });
-        
       } else if (err.code === "ENOENT") {
-        console.log("file does not exist");
+        if (!isValid(fileName)) {
+          console.log("This is not a valid file path");
+          process.exit();
+        }
+        console.log("file does not exist.");
         callback(body, fileName); // download the file;
       }
     });
-   
   });
 };
 
