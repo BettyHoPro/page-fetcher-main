@@ -6,8 +6,6 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 let isValid = require("is-valid-path");
-let isURLValid = require("valid-url");
-const urlStatusCode = require("url-status-code");
 
 const writeToFile = (data, fileName) => {
   fs.writeFile(fileName, data, (error) => {
@@ -23,6 +21,11 @@ const writeToFile = (data, fileName) => {
 
 const requestFunc = (url, fileName, callback) => {
   request(url, (error, response, body) => {
+    if (error || response.statusCode !== 200) { 
+      // check the error first, coz if there is an error, then the porgram doesn't even need to check the statusCode
+      console.log("the url is not working");
+      process.exit();
+    }
     fs.stat(fileName, (err) => {
       if (!err) {
         rl.question(
@@ -48,21 +51,5 @@ const requestFunc = (url, fileName, callback) => {
   });
 };
 
-const checkURL = (url) => {
-  if (isURLValid.isUri(url)) {
-    urlStatusCode(url, (error, statusCode) => {
-      if (error) {
-        console.log("The link is not working...");
-        process.exit();
-      } else {
-        requestFunc(process.argv[2], process.argv[3], writeToFile);
-      }
-    });
-    requestFunc(process.argv[2], process.argv[3], writeToFile);
-  } else {
-    console.log("The link is not working... God, this is so close");
-    process.exit();
-  }
-};
+requestFunc(process.argv[2], process.argv[3], writeToFile);
 
-checkURL(process.argv[2]);
